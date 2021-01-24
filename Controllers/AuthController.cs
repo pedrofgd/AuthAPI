@@ -5,6 +5,7 @@ using AuthAPI.Data;
 using AuthAPI.Helpers;
 using AuthAPI.Models;
 using AuthAPI.Repositories;
+using AuthAPI.Services;
 using AuthAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace AuthAPI.Controllers
 		}
 
 		[HttpPost]
-		[Route("create")]
+		[Route("register")]
 		public ActionResult<dynamic> CreateUser([FromBody]EditorUserViewModel model)
 		{
 			try
@@ -50,6 +51,26 @@ namespace AuthAPI.Controllers
 			{
 				return BadRequest(new { message = e.Message });
 			}
+		}
+
+		[HttpPost]
+		[Route("login")]
+		public ActionResult<dynamic> Login([FromBody]LoginUserViewModel model)
+		{
+			try
+			{
+				var user = _repository.GetUser(model.Username, model.Password);
+				var token = TokenService.GenerateToken(user);
+
+				return new {
+					user = model.Username,
+					token = token
+				};
+			}
+			catch (AppException e)
+			{
+				return BadRequest(new { message = e.Message });
+			}			
 		}
 	}
 }

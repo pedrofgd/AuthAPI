@@ -30,5 +30,19 @@ namespace AuthAPI.Repositories
       if (_context.Users.Any(x => x.Username == username))
         throw new AppException("Username já cadastrado");
     }
+
+    public User GetUser(string username, string password)
+    {
+      var user = _context.Users.Where
+      (
+        x => x.Username.ToLower() == username && 
+        x.Password == password
+      ).FirstOrDefault();
+
+      if (user == null)
+        throw new AppException("Usuário ou senha inválidos");
+      else
+        return user;
+    }
   }
 }
