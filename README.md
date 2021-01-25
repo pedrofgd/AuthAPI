@@ -2,11 +2,11 @@
 
 ### Funcionalidades
 
--[x] Cadastrar usuário
--[x] Login (autenticação)
--[ ] Editar perfil (username, alterar senha...)
--[ ] Alterar `Role` de um usuário (permitido para `admins`)
--[ ] Excluir cadastro
+- [x] Cadastrar usuário
+- [x] Login (autenticação)
+- [ ] Editar perfil (username, alterar senha...)
+- [ ] Alterar `Role` de um usuário (permitido para `admins`)
+- [ ] Excluir cadastro
 
 ### Rotas
 
