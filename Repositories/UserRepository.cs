@@ -22,6 +22,12 @@ namespace AuthAPI.Repositories
       await _context.SaveChangesAsync();
     }
 
+    public async void Put(User user)
+    {
+      _context.Entry(user).State = EntityState.Modified;
+      await _context.SaveChangesAsync();
+    }
+
     public void RegisterValidation(string username, string password)
     {
       if (string.IsNullOrWhiteSpace(password))
@@ -31,16 +37,27 @@ namespace AuthAPI.Repositories
         throw new AppException("Username já cadastrado");
     }
 
-    public User GetUser(string username, string password)
+    public User UserAuthentication(string username, string password)
     {
-      var user = _context.Users.Where
-      (
-        x => x.Username.ToLower() == username && 
+      var user = _context.Users.Where(x => 
+        x.Username == username && 
         x.Password == password
       ).FirstOrDefault();
 
       if (user == null)
         throw new AppException("Usuário ou senha inválidos");
+      else
+        return user;
+    }
+
+    public User GetUserLogged()
+    {
+      var user = _context.Users.Where(x =>
+        x.Username == User.Identity.Name
+      ).FirstOrDefault();
+
+      if (user == null)
+        throw new AppException("Usuário não autenticado. Faça login novamente");
       else
         return user;
     }

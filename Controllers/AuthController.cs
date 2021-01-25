@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using AuthAPI.Data;
 using AuthAPI.Helpers;
 using AuthAPI.Models;
@@ -7,7 +6,6 @@ using AuthAPI.Repositories;
 using AuthAPI.Services;
 using AuthAPI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthAPI.Controllers
@@ -55,13 +53,13 @@ namespace AuthAPI.Controllers
 		}
 
 		[HttpPost]
-		[Route("login")]
+		[Route("authenticate")]
 		[AllowAnonymous]
 		public ActionResult<dynamic> Login([FromBody]LoginUserViewModel model)
 		{
 			try
 			{
-				var user = _repository.GetUser(model.Username, model.Password);
+				var user = _repository.UserAuthentication(model.Username, model.Password);
 				var token = TokenService.GenerateToken(user);
 
 				return new {
