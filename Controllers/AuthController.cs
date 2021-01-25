@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AuthAPI.Data;
 using AuthAPI.Helpers;
@@ -7,12 +6,13 @@ using AuthAPI.Models;
 using AuthAPI.Repositories;
 using AuthAPI.Services;
 using AuthAPI.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthAPI.Controllers
 {
-	[ApiController]
+  [ApiController]
 	[Route("v1/account")]
 	public class AuthController : ControllerBase
 	{
@@ -26,6 +26,7 @@ namespace AuthAPI.Controllers
 
 		[HttpPost]
 		[Route("register")]
+		[AllowAnonymous]
 		public ActionResult<dynamic> CreateUser([FromBody]EditorUserViewModel model)
 		{
 			try
@@ -55,6 +56,7 @@ namespace AuthAPI.Controllers
 
 		[HttpPost]
 		[Route("login")]
+		[AllowAnonymous]
 		public ActionResult<dynamic> Login([FromBody]LoginUserViewModel model)
 		{
 			try
@@ -63,14 +65,15 @@ namespace AuthAPI.Controllers
 				var token = TokenService.GenerateToken(user);
 
 				return new {
-					user = model.Username,
+					Username = user.Username,
+					Name = user.Name,
 					token = token
 				};
 			}
 			catch (AppException e)
 			{
 				return BadRequest(new { message = e.Message });
-			}			
+			}
 		}
 	}
 }
