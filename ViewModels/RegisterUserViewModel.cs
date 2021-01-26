@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AuthAPI.ViewModels
 {
-  public class EditorUserViewModel
+  public class RegisterUserViewModel
   {
     [MinLength(3, ErrorMessage = "O username deve ter mais do que 3 caracteres")]
     [MaxLength(30, ErrorMessage = "O username deve ter menos do que 30 caracteres")]

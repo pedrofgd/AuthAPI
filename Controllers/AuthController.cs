@@ -1,5 +1,6 @@
 ﻿using System;
-using AuthAPI.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AuthAPI.Helpers;
 using AuthAPI.Models;
 using AuthAPI.Repositories;
@@ -14,18 +15,16 @@ namespace AuthAPI.Controllers
 	[Route("v1/account")]
 	public class AuthController : ControllerBase
 	{
-		private readonly DataContext _context;
 		private readonly UserRepository _repository;
-		public AuthController(DataContext context, UserRepository repository)
+		public AuthController(UserRepository repository)
 		{   
-			_context = context;
 			_repository = repository;
 		}
 
 		[HttpPost]
 		[Route("register")]
 		[AllowAnonymous]
-		public ActionResult<dynamic> CreateUser([FromBody]EditorUserViewModel model)
+		public ActionResult<dynamic> CreateUser([FromBody]RegisterUserViewModel model)
 		{
 			try
 			{
@@ -72,6 +71,27 @@ namespace AuthAPI.Controllers
 			{
 				return BadRequest(new { message = e.Message });
 			}
+		}
+		
+		[HttpPost("register/manager")]
+    public static User CreateManager()
+    {
+      var user = new User();
+      user = new User { 
+        Id = 1,
+        Username = "pedro", 
+        Password = "pedro", 
+        Role = "manager"
+      };
+
+      return user;
+    }
+
+		[HttpGet("all")]
+		[AllowAnonymous]
+		public async Task<ActionResult<List<ListUsersViewModel>>> GetAllUsers()
+		{
+			return await _repository.GetUsers();
 		}
 	}
 }

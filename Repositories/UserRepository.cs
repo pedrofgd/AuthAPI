@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthAPI.Data;
 using AuthAPI.Helpers;
 using AuthAPI.Models;
+using AuthAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +28,36 @@ namespace AuthAPI.Repositories
     {
       _context.Entry(user).State = EntityState.Modified;
       await _context.SaveChangesAsync();
+    }
+
+    public async void Delete(User user)
+    {
+      _context.Users.Remove(user);
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task<ActionResult<List<ListUsersViewModel>>> GetUsers()
+    {
+      var users = await _context
+        .Users
+        .Select(x => new ListUsersViewModel
+        {
+          Username = x.Username,
+          Role = x.Role,
+        })
+        .ToListAsync();
+
+        return users;
+    }
+
+    public User GetUserById(int id)
+    {
+      var user = _context.Users.Find(id);
+
+      if (user == null)
+        throw new AppException("O usuário informado não existe");
+      else
+        return user;
     }
 
     public void RegisterValidation(string username, string password)
