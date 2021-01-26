@@ -50,7 +50,7 @@ namespace AuthAPI.Repositories
         return user;
     }
 
-    public User GetUserLogged()
+    public User GetUserLogged(System.Security.Principal.IPrincipal User)
     {
       var user = _context.Users.Where(x =>
         x.Username == User.Identity.Name

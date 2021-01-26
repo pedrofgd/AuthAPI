@@ -26,7 +26,7 @@ namespace AuthAPI.Controllers
     [Authorize]
     public ActionResult<dynamic> ChangePassowrd([FromBody]ChangePasswordViewModel model)
     {
-      var user = _repository.GetUserLogged();
+      var user = _repository.GetUserLogged(User);
 
       if (model.currentPassword == user.Password)
       {
